@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: pyhost-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+      - projects_data:/app/projects
+    environment:
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=your@gmail.com
+      - SMTP_PASS=yourpassword
+    networks:
+      - pyhost-net
+
+  frontend:
+    image: nginx:alpine
+    container_name: pyhost-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+    networks:
+      - pyhost-net
+
+volumes:
+  projects_data:
+
+networks:
+  pyhost-net:
+    driver: bridge

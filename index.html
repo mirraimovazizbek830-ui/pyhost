@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyHost</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8f8f6;--bg2:#f0f0ed;--bg3:#e4e4df;
+  --text:#0f0f0e;--text2:#525249;--text3:#969690;
+  --border:#ddddd5;--card:#fff;
+  --blue:#0052d4;--blue2:#0041aa;--blue-bg:#eef3ff;
+  --green:#16a34a;--green-bg:#f0fdf4;
+  --red:#dc2626;--red-bg:#fef2f2;
+  --orange:#ea580c;--orange-bg:#fff7ed;
+  --sh:0 1px 3px rgba(0,0,0,.05),0 4px 12px rgba(0,0,0,.04);
+  --sh-lg:0 8px 32px rgba(0,0,0,.08);
+  --r:12px;
+}
+[data-theme="dark"]{
+  --bg:#09090b;--bg2:#111114;--bg3:#1a1a1e;
+  --text:#ededeb;--text2:#9a9a94;--text3:#525249;
+  --border:#1f1f24;--card:#111114;
+  --blue:#4d88ff;--blue2:#80aaff;--blue-bg:#080e20;
+  --green:#22c55e;--green-bg:#021a08;
+  --red:#f87171;--red-bg:#1a0404;
+  --orange:#fb923c;--orange-bg:#180900;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s}
+
+/* ── UTILS ── */
+.hidden{display:none!important}
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;text-decoration:none}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:var(--blue2);transform:translateY(-1px)}
+.btn-dark{background:var(--text);color:var(--bg)}.btn-dark:hover{opacity:.85}
+.btn-out{background:transparent;color:var(--text2);border:1px solid var(--border)}.btn-out:hover{background:var(--bg3);color:var(--text)}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{opacity:.85}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{opacity:.85}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:7px}
+.btn-full{width:100%;justify-content:center;padding:11px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--sh)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:100px;font-size:11px;font-weight:700}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-blue{background:var(--blue-bg);color:var(--blue)}
+.badge-orange{background:var(--orange-bg);color:var(--orange)}
+input,select,textarea{
+  width:100%;padding:10px 12px;border-radius:8px;
+  border:1px solid var(--border);background:var(--bg2);
+  color:var(--text);font-family:inherit;font-size:13.5px;
+  transition:border .2s;outline:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+label{font-size:13px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px}
+.form-group{margin-bottom:16px}
+.alert{padding:12px 16px;border-radius:9px;font-size:13px;font-weight:500;margin-bottom:14px;display:none}
+.alert.show{display:block}
+.alert-err{background:var(--red-bg);color:var(--red);border:1px solid color-mix(in srgb,var(--red) 20%,transparent)}
+.alert-ok{background:var(--green-bg);color:var(--green);border:1px solid color-mix(in srgb,var(--green) 20%,transparent)}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--bg);border-bottom:1px solid var(--border);transition:all .2s}
+.nav-logo{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:7px}
+.nav-logo em{font-style:normal;background:var(--blue);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px}
+.nav-r{display:flex;align-items:center;gap:6px}
+.tbtn{width:32px;height:32px;border-radius:7px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;color:var(--text)}
+.tbtn:hover{background:var(--bg3)}
+
+/* ── AUTH PAGES ── */
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 16px 24px}
+.auth-box{width:100%;max-width:420px}
+.auth-logo{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--blue);margin-bottom:6px}
+.auth-sub{font-size:14px;color:var(--text3);margin-bottom:28px}
+.auth-title{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.otp-inputs{display:flex;gap:10px;justify-content:center;margin:16px 0}
+.otp-inputs input{width:56px;height:56px;text-align:center;font-size:24px;font-weight:800;border-radius:10px;font-family:'JetBrains Mono',monospace;padding:0}
+.auth-link{font-size:13px;color:var(--text3);text-align:center;margin-top:16px}
+.auth-link a{color:var(--blue);text-decoration:none;font-weight:600}
+
+/* ── DASHBOARD ── */
+.dash-layout{display:flex;min-height:100vh;padding-top:54px}
+.sidebar{width:220px;flex-shrink:0;border-right:1px solid var(--border);background:var(--bg);padding:16px;position:fixed;top:54px;bottom:0;overflow-y:auto}
+.sidebar-menu{list-style:none}
+.sidebar-menu li a{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;color:var(--text2);text-decoration:none;font-size:13.5px;font-weight:500;transition:all .2s}
+.sidebar-menu li a:hover,.sidebar-menu li a.active{background:var(--bg3);color:var(--text)}
+.sidebar-menu li a .ico{font-size:16px}
+.sidebar-user{border-top:1px solid var(--border);margin-top:auto;padding-top:14px}
+.su-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.su-plan{font-size:11px;color:var(--text3)}
+.su-balance{font-size:12px;color:var(--green);font-weight:600;margin-top:4px}
+.dash-main{flex:1;margin-left:220px;padding:24px}
+
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;margin-bottom:3px}
+.stat-lbl{font-size:12px;color:var(--text3);font-weight:500}
+
+/* ── PROJECTS ── */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.project-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh);transition:all .2s}
+.project-card:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pc-name{font-size:15px;font-weight:700}
+.pc-type{font-size:11px;color:var(--text3);margin-top:2px}
+.pc-btns{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;display:none}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border-radius:16px;padding:24px;width:100%;max-width:440px;box-shadow:var(--sh-lg)}
+.modal-title{font-size:18px;font-weight:800;margin-bottom:16px}
+.modal-close{float:right;cursor:pointer;color:var(--text3);font-size:20px;line-height:1}
+
+/* ── LOGS ── */
+.logs-box{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;max-height:300px;overflow-y:auto;color:var(--text2);white-space:pre-wrap}
+
+/* ── FILES ── */
+.file-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);font-size:13px}
+.file-row:last-child{border-bottom:none}
+.file-row:hover{background:var(--bg2)}
+.file-name{font-family:'JetBrains Mono',monospace;cursor:pointer;color:var(--blue)}
+.file-size{font-size:11px;color:var(--text3)}
+
+/* ── EDITOR ── */
+.editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.editor-filename{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
+textarea.code-editor{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;background:var(--bg3);border:1px solid var(--border);border-radius:9px;min-height:300px;resize:vertical;padding:14px}
+
+/* ── ADMIN ── */
+.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table th{padding:9px 12px;text-align:left;font-weight:700;font-size:11.5px;background:var(--bg2);color:var(--text2);border-bottom:2px solid var(--border)}
+.admin-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle}
+.admin-table tr:hover td{background:var(--bg2)}
+
+/* ── PLAN CARDS ── */
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;cursor:pointer;transition:all .2s}
+.plan-card:hover,.plan-card.selected{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+.plan-price{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;margin:8px 0 4px}
+.plan-features{font-size:12px;color:var(--text3);line-height:1.8}
+
+/* ── SECTION TITLE ── */
+.sec-title{font-size:18px;font-weight:800;letter-spacing:-.02em;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+
+@media(max-width:640px){
+  .sidebar{display:none}
+  .dash-main{margin-left:0}
+  .projects-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING ═══ -->
+<div id="page-landing" class="page active">
+  <nav class="nav">
+    <a href="#" class="nav-logo">PyHost <em>BETA</em></a>
+    <div class="nav-r">
+      <button class="tbtn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <a href="#" class="btn btn-out btn-sm" onclick="showPage('login')">Kirish</a>
+      <a href="#" class="btn btn-blue btn-sm" onclick="showPage('register')">Ro'yxatdan o'tish</a>
+    </div>
+  </nav>
+  <div style="max-width:800px;margin:0 auto;padding:140px 20px 60px;text-align:center">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--green-bg);color:var(--green);border:1px solid color-mix(in srgb,var(--green) 20%,transparent);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:700;margin-bottom:22px">
+      <span>●</span> 1 oy bepul sinash · Karta shart emas
+    </div>
+    <h1 style="font-size:clamp(28px,6vw,56px);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:14px">
+      Bot va saytingizni<br><span style="color:var(--blue)">bepul hosting</span> qiling
+    </h1>
+    <p style="font-size:16px;color:var(--text2);max-width:480px;margin:0 auto 30px;line-height:1.75">
+      Python, PHP, Node.js, HTML — istalgan til. SSL, Database, Fayl menejer — barcha tariflarda bepul.
+    </p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a href="#" class="btn btn-blue" style="padding:12px 28px;font-size:15px" onclick="showPage('register')">Bepul boshlash →</a>
+      <a href="#pricing" class="btn btn-out" style="padding:12px 28px;font-size:15px">Narxlarni ko'rish</a>
+    </div>
+    <!-- Stats -->
+    <div style="display:flex;justify-content:center;gap:0;margin-top:48px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--card);max-width:560px;margin:48px auto 0">
+      <div style="flex:1;padding:18px;text-align:center;border-right:1px solid var(--border)">
+        <div class="mono" style="font-size:20px;font-weight:700">5+</div>
+        <div style="font-size:11px;color:var(--text3)">Tillar</div>
+      </div>
+      <div style="flex:1;padding:18px;text-align:center;border-right:1px solid var(--border)">
+        <div class="mono" style="font-size:20px;font-weight:700">24/7</div>
+        <div style="font-size:11px;color:var(--text3)">Ishlash</div>
+      </div>
+      <div style="flex:1;padding:18px;text-align:center;border-right:1px solid var(--border)">
+        <div class="mono" style="font-size:20px;font-weight:700">$0</div>
+        <div style="font-size:11px;color:var(--text3)">Boshlash</div>
+      </div>
+      <div style="flex:1;padding:18px;text-align:center">
+        <div class="mono" style="font-size:20px;font-weight:700">SSL</div>
+        <div style="font-size:11px;color:var(--text3)">Bepul</div>
+      </div>
+    </div>
+  </div>
+  <!-- Pricing -->
+  <div id="pricing" style="max-width:1060px;margin:0 auto;padding:60px 20px">
+    <div style="text-align:center;margin-bottom:36px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:6px">// tariflar</div>
+      <h2 style="font-size:28px;font-weight:800;letter-spacing:-.025em">Narxlar</h2>
+    </div>
+    <div class="plan-grid" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr))">
+      <div class="card" style="text-align:center">
+        <div class="badge badge-green" style="margin-bottom:8px">● Starter</div>
+        <div class="plan-price">0 <span style="font-size:13px;color:var(--text3)">so'm</span></div>
+        <div class="plan-features">1 loyiha · 64MB · 1 oy bepul</div>
+        <a href="#" class="btn btn-out btn-full" style="margin-top:14px" onclick="showPage('register')">Boshlash</a>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="badge badge-orange" style="margin-bottom:8px">● Basic</div>
+        <div class="plan-price">6 300 <span style="font-size:13px;color:var(--text3)">so'm</span></div>
+        <div class="plan-features">3 loyiha · 1GB disk</div>
+        <a href="#" class="btn btn-out btn-full" style="margin-top:14px" onclick="showPage('register')">Tanlash</a>
+      </div>
+      <div class="card" style="text-align:center;border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)">
+        <div class="badge badge-blue" style="margin-bottom:8px">⭐ Pro</div>
+        <div class="plan-price">9 830 <span style="font-size:13px;color:var(--text3)">so'm</span></div>
+        <div class="plan-features">10 loyiha · 2GB disk</div>
+        <a href="#" class="btn btn-blue btn-full" style="margin-top:14px" onclick="showPage('register')">Tanlash →</a>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="badge" style="background:var(--purple-bg,#f5f3ff);color:#6d28d9;margin-bottom:8px">● Business</div>
+        <div class="plan-price">47 000 <span style="font-size:13px;color:var(--text3)">so'm</span></div>
+        <div class="plan-features">30 loyiha · 10GB disk</div>
+        <a href="#" class="btn btn-out btn-full" style="margin-top:14px" onclick="showPage('register')">Tanlash</a>
+      </div>
+      <div class="card" style="text-align:center;border-color:#d97706">
+        <div class="badge" style="background:#fefce8;color:#92400e;margin-bottom:8px">★ Enterprise</div>
+        <div class="plan-price">219 000 <span style="font-size:13px;color:var(--text3)">so'm</span></div>
+        <div class="plan-features">Cheksiz loyiha · 50GB disk</div>
+        <a href="#" class="btn btn-full" style="margin-top:14px;background:#d97706;color:#fff" onclick="showPage('register')">Tanlash →</a>
+      </div>
+    </div>
+  </div>
+  <footer style="border-top:1px solid var(--border);padding:24px 20px;text-align:center;font-size:12.5px;color:var(--text3)">
+    <strong style="color:var(--text2)">PyHost</strong> — O'zbekistondagi eng arzon hosting · 2024
+  </footer>
+</div>
+
+<!-- ═══ REGISTER ═══ -->
+<div id="page-register" class="page">
+  <nav class="nav">
+    <a href="#" class="nav-logo" onclick="showPage('landing')">PyHost <em>BETA</em></a>
+    <div class="nav-r">
+      <button class="tbtn" onclick="toggleTheme()">🌙</button>
+    </div>
+  </nav>
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-logo">PyHost</div>
+      <div class="auth-title">Ro'yxatdan o'tish</div>
+      <div class="auth-sub">Hisobingizni yarating — 1 oy bepul</div>
+      <div class="alert alert-err" id="reg-err"></div>
+      <div class="alert alert-ok" id="reg-ok"></div>
+      <div class="form-group">
+        <label>Ismingiz</label>
+        <input type="text" id="reg-name" placeholder="Ali Valiyev">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="email@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>Parol</label>
+        <input type="password" id="reg-password" placeholder="Kamida 6 ta belgi">
+      </div>
+      <button class="btn btn-blue btn-full" onclick="doRegister()">Ro'yxatdan o'tish →</button>
+      <div class="auth-link">Hisobingiz bormi? <a href="#" onclick="showPage('login')">Kirish</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VERIFY ═══ -->
+<div id="page-verify" class="page">
+  <nav class="nav">
+    <a href="#" class="nav-logo" onclick="showPage('landing')">PyHost <em>BETA</em></a>
+    <div class="nav-r"><button class="tbtn" onclick="toggleTheme()">🌙</button></div>
+  </nav>
+  <div class="auth-wrap">
+    <div class="auth-box" style="text-align:center">
+      <div class="auth-logo">PyHost</div>
+      <div class="auth-title">Email tasdiqlash</div>
+      <div class="auth-sub" id="verify-sub">Emailingizga 4 xonali kod yuborildi</div>
+      <div class="alert alert-err" id="ver-err"></div>
+      <div class="alert alert-ok" id="ver-ok"></div>
+      <div class="otp-inputs">
+        <input type="tel" maxlength="1" id="otp1" oninput="otpNext(this,'otp2')">
+        <input type="tel" maxlength="1" id="otp2" oninput="otpNext(this,'otp3')" onkeydown="otpBack(event,'otp1')">
+        <input type="tel" maxlength="1" id="otp3" oninput="otpNext(this,'otp4')" onkeydown="otpBack(event,'otp2')">
+        <input type="tel" maxlength="1" id="otp4" oninput="otpNext(this,null)" onkeydown="otpBack(event,'otp3')">
+      </div>
+      <button class="btn btn-blue btn-full" onclick="doVerify()">Tasdiqlash →</button>
+      <div class="auth-link">Kod kelmadimi? <a href="#" onclick="doRegisterResend()">Qayta yuborish</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="page-login" class="page">
+  <nav class="nav">
+    <a href="#" class="nav-logo" onclick="showPage('landing')">PyHost <em>BETA</em></a>
+    <div class="nav-r"><button class="tbtn" onclick="toggleTheme()">🌙</button></div>
+  </nav>
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-logo">PyHost</div>
+      <div class="auth-title">Kirish</div>
+      <div class="auth-sub">Ism va parol bilan kiring</div>
+      <div class="alert alert-err" id="login-err"></div>
+      <div class="form-group">
+        <label>Ismingiz</label>
+        <input type="text" id="login-name" placeholder="Ali Valiyev">
+      </div>
+      <div class="form-group">
+        <label>Parol</label>
+        <input type="password" id="login-password" placeholder="Parolingiz">
+      </div>
+      <button class="btn btn-blue btn-full" onclick="doLogin()">Kirish →</button>
+      <div class="auth-link">Hisobingiz yo'qmi? <a href="#" onclick="showPage('register')">Ro'yxatdan o'tish</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div id="page-dashboard" class="page">
+  <nav class="nav">
+    <a href="#" class="nav-logo">PyHost <em>BETA</em></a>
+    <div class="nav-r">
+      <button class="tbtn" onclick="toggleTheme()">🌙</button>
+      <button class="btn btn-out btn-sm" onclick="doLogout()">Chiqish</button>
+    </div>
+  </nav>
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <ul class="sidebar-menu" style="flex:1">
+        <li><a href="#" class="active" onclick="dashTab('projects')"><span class="ico">🚀</span> Loyihalar</a></li>
+        <li><a href="#" onclick="dashTab('files')"><span class="ico">📁</span> Fayllar</a></li>
+        <li><a href="#" onclick="dashTab('plan')"><span class="ico">💎</span> Tarif</a></li>
+      </ul>
+      <div class="sidebar-user" style="margin-top:20px">
+        <div class="su-name" id="sb-name">—</div>
+        <div class="su-plan" id="sb-plan">—</div>
+        <div class="su-balance" id="sb-balance">0 so'm</div>
+      </div>
+    </aside>
+    <main class="dash-main">
+      <!-- Projects Tab -->
+      <div id="tab-projects">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-val mono" id="st-projects">0</div>
+            <div class="stat-lbl">Loyihalar</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val mono" id="st-running">0</div>
+            <div class="stat-lbl">Ishlayapti</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val mono" id="st-balance">0</div>
+            <div class="stat-lbl">Balans (so'm)</div>
+          </div>
+        </div>
+        <div class="sec-title">
+          Loyihalar
+          <button class="btn btn-blue btn-sm" onclick="openNewProject()">+ Yangi</button>
+        </div>
+        <div class="projects-grid" id="projects-list"></div>
+      </div>
+      <!-- Files Tab -->
+      <div id="tab-files" class="hidden">
+        <div class="sec-title">
+          <span id="files-title">Fayllar</span>
+          <button class="btn btn-blue btn-sm" onclick="openNewFile()">+ Yangi fayl</button>
+        </div>
+        <div class="card" id="files-list"></div>
+        <!-- Editor -->
+        <div id="editor-section" class="hidden" style="margin-top:16px">
+          <div class="editor-header">
+            <span class="editor-filename" id="editor-fname">—</span>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-out btn-sm" onclick="closeEditor()">Yopish</button>
+              <button class="btn btn-blue btn-sm" onclick="saveFile()">Saqlash</button>
+            </div>
+          </div>
+          <textarea class="code-editor" id="code-editor" rows="20"></textarea>
+        </div>
+      </div>
+      <!-- Plan Tab -->
+      <div id="tab-plan" class="hidden">
+        <div class="sec-title">Tarif</div>
+        <div id="current-plan-info" class="card" style="margin-bottom:20px"></div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Balansni to'ldirish uchun admin bilan bog'laning: <strong>@pyhost_admin</strong></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══ ADMIN ═══ -->
+<div id="page-admin-login" class="page">
+  <nav class="nav">
+    <a href="#" class="nav-logo" onclick="showPage('landing')">PyHost <em>BETA</em></a>
+    <div class="nav-r"><button class="tbtn" onclick="toggleTheme()">🌙</button></div>
+  </nav>
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-logo" style="color:var(--red)">Admin Panel</div>
+      <div class="auth-title">Admin kirish</div>
+      <div class="auth-sub">Faqat admin uchun</div>
+      <div class="alert alert-err" id="admin-err"></div>
+      <div class="form-group">
+        <label>Admin parol</label>
+        <input type="password" id="admin-pass" placeholder="Admin paroli">
+      </div>
+      <button class="btn btn-dark btn-full" onclick="doAdminLogin()">Kirish →</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-admin" class="page">
+  <nav class="nav">
+    <a href="#" class="nav-logo">PyHost <em>Admin</em></a>
+    <div class="nav-r">
+      <button class="tbtn" onclick="toggleTheme()">🌙</button>
+      <button class="btn btn-out btn-sm" onclick="doLogout()">Chiqish</button>
+    </div>
+  </nav>
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li><a href="#" class="active" onclick="adminTab('stats')"><span class="ico">📊</span> Statistika</a></li>
+        <li><a href="#" onclick="adminTab('users')"><span class="ico">👥</span> Foydalanuvchilar</a></li>
+      </ul>
+    </aside>
+    <main class="dash-main">
+      <!-- Stats -->
+      <div id="atab-stats">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-val mono" id="ast-users">0</div>
+            <div class="stat-lbl">Foydalanuvchilar</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val mono" id="ast-projects">0</div>
+            <div class="stat-lbl">Loyihalar</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val mono" id="ast-running">0</div>
+            <div class="stat-lbl">Ishlayapti</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val mono" id="ast-balance">0</div>
+            <div class="stat-lbl">Jami balans</div>
+          </div>
+        </div>
+      </div>
+      <!-- Users -->
+      <div id="atab-users" class="hidden">
+        <div class="sec-title">Foydalanuvchilar</div>
+        <div style="overflow-x:auto">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Ism</th><th>Email</th><th>Tarif</th>
+                <th>Balans</th><th>Status</th><th>Amallar</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+<!-- New Project -->
+<div class="modal-overlay" id="modal-newproject">
+  <div class="modal">
+    <div class="modal-title">
+      Yangi loyiha
+      <span class="modal-close" onclick="closeModal('modal-newproject')">×</span>
+    </div>
+    <div class="alert alert-err" id="np-err"></div>
+    <div class="form-group">
+      <label>Loyiha nomi</label>
+      <input type="text" id="np-name" placeholder="masalan: my-bot">
+    </div>
+    <div class="form-group">
+      <label>Tur</label>
+      <select id="np-type">
+        <option value="bot">🤖 Telegram Bot</option>
+        <option value="website">🌐 Sayt</option>
+        <option value="script">⚡ Script</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Til</label>
+      <select id="np-lang">
+        <option value="python">🐍 Python</option>
+        <option value="nodejs">⚡ Node.js</option>
+        <option value="php">🐘 PHP</option>
+        <option value="html">🌐 HTML/CSS/JS</option>
+      </select>
+    </div>
+    <button class="btn btn-blue btn-full" onclick="doCreateProject()">Yaratish →</button>
+  </div>
+</div>
+
+<!-- Logs -->
+<div class="modal-overlay" id="modal-logs">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-title">
+      Logs
+      <span class="modal-close" onclick="closeModal('modal-logs')">×</span>
+    </div>
+    <div class="logs-box" id="logs-content">Yuklanmoqda...</div>
+    <div style="margin-top:12px">
+      <button class="btn btn-out btn-sm" onclick="refreshLogs()">🔄 Yangilash</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Add Balance -->
+<div class="modal-overlay" id="modal-balance">
+  <div class="modal">
+    <div class="modal-title">
+      Balans qo'shish
+      <span class="modal-close" onclick="closeModal('modal-balance')">×</span>
+    </div>
+    <div class="alert alert-ok" id="bal-ok"></div>
+    <div class="alert alert-err" id="bal-err"></div>
+    <div class="form-group">
+      <label>Foydalanuvchi: <span id="bal-username" style="color:var(--blue)"></span></label>
+    </div>
+    <div class="form-group">
+      <label>Miqdor (so'm)</label>
+      <input type="number" id="bal-amount" placeholder="10000">
+    </div>
+    <button class="btn btn-green btn-full" onclick="doAddBalance()">Qo'shish ✓</button>
+  </div>
+</div>
+
+<!-- Admin Change Plan -->
+<div class="modal-overlay" id="modal-plan">
+  <div class="modal">
+    <div class="modal-title">
+      Tarif o'zgartirish
+      <span class="modal-close" onclick="closeModal('modal-plan')">×</span>
+    </div>
+    <div class="form-group">
+      <label>Foydalanuvchi: <span id="plan-username" style="color:var(--blue)"></span></label>
+    </div>
+    <div class="form-group">
+      <label>Tarif</label>
+      <select id="plan-select">
+        <option value="free">Starter (Bepul)</option>
+        <option value="basic">Basic (6 300 so'm)</option>
+        <option value="pro">Pro (9 830 so'm)</option>
+        <option value="business">Business (47 000 so'm)</option>
+        <option value="enterprise">Enterprise (219 000 so'm)</option>
+      </select>
+    </div>
+    <button class="btn btn-blue btn-full" onclick="doChangePlan()">Saqlash →</button>
+  </div>
+</div>
+
+<!-- New File -->
+<div class="modal-overlay" id="modal-newfile">
+  <div class="modal">
+    <div class="modal-title">
+      Yangi fayl
+      <span class="modal-close" onclick="closeModal('modal-newfile')">×</span>
+    </div>
+    <div class="form-group">
+      <label>Fayl nomi</label>
+      <input type="text" id="nf-name" placeholder="main.py">
+    </div>
+    <button class="btn btn-blue btn-full" onclick="doCreateFile()">Yaratish →</button>
+  </div>
+</div>
+
+<script>
+const API = '/api';
+let token = localStorage.getItem('token') || '';
+let currentUser = null;
+let currentProjectId = null;
+let currentLogsProjectId = null;
+let balanceTargetUser = null;
+let planTargetUser = null;
+
+// ── THEME ──
+function toggleTheme(){
+  const h=document.documentElement;
+  const t=h.getAttribute('data-theme')==='light'?'dark':'light';
+  h.setAttribute('data-theme',t);
+  localStorage.setItem('theme',t);
+  document.querySelectorAll('.tbtn').forEach(b=>b.textContent=t==='dark'?'☀️':'🌙');
+}
+if(localStorage.getItem('theme')==='dark'){
+  document.documentElement.setAttribute('data-theme','dark');
+  document.querySelectorAll('.tbtn').forEach(b=>b.textContent='☀️');
+}
+
+// ── PAGES ──
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── ALERT ──
+function showAlert(id, msg, type='err'){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.className=`alert alert-${type} show`;
+  el.textContent=msg;
+  setTimeout(()=>el.classList.remove('show'),4000);
+}
+
+// ── FETCH ──
+async function api(method, path, body=null, tok=null){
+  const url = API + path + (tok||token ? `?token=${tok||token}` : '');
+  const opts = {
+    method,
+    headers:{'Content-Type':'application/json'},
+  };
+  if(body) opts.body=JSON.stringify(body);
+  const r = await fetch(url,opts);
+  return r.json();
+}
+
+// ── INIT ──
+async function init(){
+  if(token){
+    const d = await api('GET','/auth/me');
+    if(d.ok){
+      currentUser = d.user;
+      if(currentUser.email==='admin'){
+        loadAdminDash();
+        showPage('admin');
+      } else {
+        loadDashboard();
+        showPage('dashboard');
+      }
+      return;
+    }
+  }
+  showPage('landing');
+}
+
+// ── REGISTER ──
+async function doRegister(){
+  const name=document.getElementById('reg-name').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const pass=document.getElementById('reg-password').value;
+  if(!name||!email||!pass) return showAlert('reg-err','Barcha maydonlarni to\'ldiring');
+  if(pass.length<6) return showAlert('reg-err','Parol kamida 6 ta belgi bo\'lsin');
+  const d=await api('POST','/auth/register',{name,email,password:pass},'');
+  if(d.ok){
+    localStorage.setItem('pendingEmail', email);
+    document.getElementById('verify-sub').textContent = `${email} ga 4 xonali kod yuborildi`;
+    showPage('verify');
+  } else showAlert('reg-err', d.detail||'Xatolik');
+}
+
+// ── VERIFY ──
+function otpNext(el, nextId){
+  if(el.value && nextId) document.getElementById(nextId).focus();
+  if(!nextId) doVerify();
+}
+function otpBack(e, prevId){
+  if(e.key==='Backspace' && !e.target.value && prevId)
+    document.getElementById(prevId).focus();
+}
+async function doVerify(){
+  const code=['otp1','otp2','otp3','otp4'].map(id=>document.getElementById(id).value).join('');
+  if(code.length<4) return showAlert('ver-err','4 xonali kodni kiriting');
+  const email = localStorage.getItem('pendingEmail');
+  const d=await api('POST','/auth/verify',{email,code},'');
+  if(d.ok){
+    showAlert('ver-ok','Email tasdiqlandi! Endi kirishingiz mumkin.','ok');
+    setTimeout(()=>showPage('login'),1500);
+  } else showAlert('ver-err', d.detail||'Kod noto\'g\'ri');
+}
+
+// ── LOGIN ──
+async function doLogin(){
+  const name=document.getElementById('login-name').value.trim();
+  const pass=document.getElementById('login-password').value;
+  if(!name||!pass) return showAlert('login-err','Ism va parolni kiriting');
+  const d=await api('POST','/auth/login',{name,password:pass},'');
+  if(d.ok){
+    token=d.token;
+    currentUser=d.user;
+    localStorage.setItem('token',token);
+    loadDashboard();
+    showPage('dashboard');
+  } else showAlert('login-err', d.detail||'Xatolik');
+}
+
+// ── LOGOUT ──
+async function doLogout(){
+  await api('POST','/auth/logout');
+  token=''; currentUser=null;
+  localStorage.removeItem('token');
+  showPage('landing');
+}
+
+// ── DASHBOARD ──
+function loadDashboard(){
+  if(!currentUser) return;
+  document.getElementById('sb-name').textContent = currentUser.name;
+  document.getElementById('sb-plan').textContent = currentUser.plan.toUpperCase();
+  document.getElementById('sb-balance').textContent = (currentUser.balance||0).toLocaleString() + ' so\'m';
+  document.getElementById('st-balance').textContent = (currentUser.balance||0).toLocaleString();
+  loadProjects();
+}
+
+async function loadProjects(){
+  const d=await api('GET','/projects');
+  if(!d.ok) return;
+  const list=document.getElementById('projects-list');
+  const running = d.projects.filter(p=>p.status==='running').length;
+  document.getElementById('st-projects').textContent = d.projects.length;
+  document.getElementById('st-running').textContent = running;
+  if(!d.projects.length){
+    list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:40px;margin-bottom:10px">🚀</div><div>Loyihangiz yo\'q. Yangi loyiha yarating!</div></div>';
+    return;
+  }
+  const langIcons={python:'🐍',nodejs:'⚡',php:'🐘',html:'🌐'};
+  const typeIcons={bot:'🤖',website:'🌐',script:'⚡'};
+  list.innerHTML = d.projects.map(p=>`
+    <div class="project-card">
+      <div class="pc-top">
+        <div>
+          <div class="pc-name">${langIcons[p.language]||'📦'} ${p.name}</div>
+          <div class="pc-type">${typeIcons[p.type]||''} ${p.type} · ${p.language}</div>
+        </div>
+        <span class="badge ${p.status==='running'?'badge-green':'badge-red'}">
+          ${p.status==='running'?'● Ishlayapti':'■ To\'xtatilgan'}
+        </span>
+      </div>
+      <div class="pc-btns">
+        ${p.status!=='running'
+          ? `<button class="btn btn-green btn-sm" onclick="projectAction(${p.id},'start')">▶ Start</button>`
+          : `<button class="btn btn-out btn-sm" onclick="projectAction(${p.id},'stop')">■ Stop</button>
+             <button class="btn btn-out btn-sm" onclick="projectAction(${p.id},'restart')">↺ Restart</button>`}
+        <button class="btn btn-out btn-sm" onclick="viewLogs(${p.id})">📋 Logs</button>
+        <button class="btn btn-out btn-sm" onclick="openFiles(${p.id},'${p.name}')">📁 Fayllar</button>
+        <button class="btn btn-red btn-sm" onclick="deleteProject(${p.id})">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function projectAction(id, action){
+  const d = await api('POST', `/projects/${id}/${action}`);
+  if(d.ok) loadProjects();
+  else alert(d.detail||'Xatolik');
+}
+
+async function deleteProject(id){
+  if(!confirm('Loyihani o\'chirishni tasdiqlaysizmi?')) return;
+  const d=await api('DELETE',`/projects/${id}`);
+  if(d.ok) loadProjects();
+}
+
+function openNewProject(){ openModal('modal-newproject') }
+
+async function doCreateProject(){
+  const name=document.getElementById('np-name').value.trim();
+  const type=document.getElementById('np-type').value;
+  const language=document.getElementById('np-lang').value;
+  if(!name) return showAlert('np-err','Nom kiriting');
+  const d=await api('POST','/projects',{name,type,language});
+  if(d.ok){
+    closeModal('modal-newproject');
+    document.getElementById('np-name').value='';
+    loadProjects();
+  } else showAlert('np-err', d.detail||'Xatolik');
+}
+
+// ── LOGS ──
+async function viewLogs(id){
+  currentLogsProjectId=id;
+  openModal('modal-logs');
+  refreshLogs();
+}
+async function refreshLogs(){
+  if(!currentLogsProjectId) return;
+  const d=await api('GET',`/projects/${currentLogsProjectId}/logs`);
+  document.getElementById('logs-content').textContent = d.logs||'Log yo\'q';
+}
+
+// ── FILES ──
+async function openFiles(projectId, name){
+  currentProjectId=projectId;
+  document.getElementById('files-title').textContent = `📁 ${name} — Fayllar`;
+  dashTab('files');
+  closeEditor();
+  await loadFiles();
+}
+async function loadFiles(){
+  const d=await api('GET',`/projects/${currentProjectId}/files`);
+  const box=document.getElementById('files-list');
+  if(!d.files||!d.files.length){
+    box.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3)">Fayl yo\'q. Yangi fayl yarating.</div>';
+    return;
+  }
+  box.innerHTML = d.files.map(f=>`
+    <div class="file-row">
+      <span class="file-name" onclick="openFile('${f.name}')">${f.name}</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="file-size">${(f.size/1024).toFixed(1)} KB</span>
+        <button class="btn btn-red btn-sm" onclick="delFile('${f.name}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+async function openFile(name){
+  const d=await api('GET',`/projects/${currentProjectId}/files/${name}`);
+  document.getElementById('editor-fname').textContent=name;
+  document.getElementById('code-editor').value=d.content||'';
+  document.getElementById('editor-section').classList.remove('hidden');
+}
+async function saveFile(){
+  const name=document.getElementById('editor-fname').textContent;
+  const content=document.getElementById('code-editor').value;
+  const d=await api('POST',`/projects/${currentProjectId}/files/${name}`,{content});
+  if(d.ok) alert('Saqlandi ✓');
+}
+function closeEditor(){
+  document.getElementById('editor-section').classList.add('hidden');
+}
+async function delFile(name){
+  if(!confirm(`${name} ni o'chirishni tasdiqlaysizmi?`)) return;
+  await api('DELETE',`/projects/${currentProjectId}/files/${name}`);
+  loadFiles();
+}
+function openNewFile(){ openModal('modal-newfile') }
+async function doCreateFile(){
+  const name=document.getElementById('nf-name').value.trim();
+  if(!name) return;
+  await api('POST',`/projects/${currentProjectId}/files/${name}`,{content:''});
+  closeModal('modal-newfile');
+  document.getElementById('nf-name').value='';
+  loadFiles();
+  openFile(name);
+}
+
+// ── DASH TABS ──
+function dashTab(tab){
+  ['projects','files','plan'].forEach(t=>{
+    document.getElementById(`tab-${t}`).classList.toggle('hidden',t!==tab);
+  });
+  document.querySelectorAll('.sidebar-menu a').forEach(a=>a.classList.remove('active'));
+  if(tab==='plan') loadPlanInfo();
+}
+
+function loadPlanInfo(){
+  if(!currentUser) return;
+  const plans={
+    free:{label:'Starter',price:'Bepul',disk:'64 MB',projects:'1'},
+    basic:{label:'Basic',price:'6 300 so\'m/oy',disk:'1 GB',projects:'3'},
+    pro:{label:'Pro',price:'9 830 so\'m/oy',disk:'2 GB',projects:'10'},
+    business:{label:'Business',price:'47 000 so\'m/oy',disk:'10 GB',projects:'30'},
+    enterprise:{label:'Enterprise',price:'219 000 so\'m/oy',disk:'50 GB',projects:'Cheksiz'},
+  };
+  const p=plans[currentUser.plan]||plans.free;
+  document.getElementById('current-plan-info').innerHTML=`
+    <div style="font-size:16px;font-weight:700;margin-bottom:12px">Joriy tarif: ${p.label}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;color:var(--text2)">
+      <div>💰 Narx: <strong>${p.price}</strong></div>
+      <div>💾 Disk: <strong>${p.disk}</strong></div>
+      <div>🚀 Loyihalar: <strong>${p.projects}</strong></div>
+      <div>💳 Balans: <strong>${(currentUser.balance||0).toLocaleString()} so'm</strong></div>
+    </div>
+  `;
+}
+
+// ── ADMIN LOGIN ──
+async function doAdminLogin(){
+  const pass=document.getElementById('admin-pass').value;
+  const d=await api('POST','/admin/login',{password:pass},'');
+  if(d.ok){
+    token=d.token;
+    localStorage.setItem('token',token);
+    currentUser={email:'admin'};
+    loadAdminDash();
+    showPage('admin');
+  } else showAlert('admin-err', d.detail||'Parol noto\'g\'ri');
+}
+
+// ── ADMIN DASH ──
+async function loadAdminDash(){
+  const d=await api('GET','/admin/stats');
+  if(d.ok){
+    document.getElementById('ast-users').textContent=d.stats.total_users;
+    document.getElementById('ast-projects').textContent=d.stats.total_projects;
+    document.getElementById('ast-running').textContent=d.stats.running_projects;
+    document.getElementById('ast-balance').textContent=(d.stats.total_balance||0).toLocaleString();
+  }
+}
+
+async function loadAdminUsers(){
+  const d=await api('GET','/admin/users');
+  if(!d.ok) return;
+  const plans={free:'Starter',basic:'Basic',pro:'Pro',business:'Business',enterprise:'Enterprise'};
+  document.getElementById('admin-users-list').innerHTML = d.users.map(u=>`
+    <tr>
+      <td class="mono">#${u.id}</td>
+      <td><strong>${u.name}</strong></td>
+      <td style="color:var(--text3)">${u.email}</td>
+      <td><span class="badge badge-blue">${plans[u.plan]||u.plan}</span></td>
+      <td class="mono">${(u.balance||0).toLocaleString()} so'm</td>
+      <td><span class="badge ${u.is_active?'badge-green':'badge-red'}">${u.is_active?'Aktiv':'Bloklangan'}</span></td>
+      <td>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="btn btn-green btn-sm" onclick="openBalance(${u.id},'${u.name}')">+ Balans</button>
+          <button class="btn btn-blue btn-sm" onclick="openPlan(${u.id},'${u.name}')">Tarif</button>
+          <button class="btn ${u.is_active?'btn-red':'btn-out'} btn-sm" onclick="blockUser(${u.id})">
+            ${u.is_active?'Blok':'Blokdan chiq'}
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function adminTab(tab){
+  ['stats','users'].forEach(t=>{
+    document.getElementById(`atab-${t}`).classList.toggle('hidden',t!==tab);
+  });
+  document.querySelectorAll('#page-admin .sidebar-menu a').forEach(a=>a.classList.remove('active'));
+  event.target.classList.add('active');
+  if(tab==='users') loadAdminUsers();
+  if(tab==='stats') loadAdminDash();
+}
+
+// ── BALANCE ──
+function openBalance(userId, name){
+  balanceTargetUser=userId;
+  document.getElementById('bal-username').textContent=name;
+  document.getElementById('bal-amount').value='';
+  openModal('modal-balance');
+}
+async function doAddBalance(){
+  const amount=parseInt(document.getElementById('bal-amount').value);
+  if(!amount||amount<=0) return showAlert('bal-err','Miqdor kiriting');
+  const d=await api('POST','/admin/balance',{user_id:balanceTargetUser,amount});
+  if(d.ok){
+    showAlert('bal-ok',d.message,'ok');
+    loadAdminUsers();
+    setTimeout(()=>closeModal('modal-balance'),1500);
+  } else showAlert('bal-err', d.detail||'Xatolik');
+}
+
+// ── PLAN ──
+function openPlan(userId, name){
+  planTargetUser=userId;
+  document.getElementById('plan-username').textContent=name;
+  openModal('modal-plan');
+}
+async function doChangePlan(){
+  const plan=document.getElementById('plan-select').value;
+  const d=await api('POST','/admin/plan',{user_id:planTargetUser,plan});
+  if(d.ok){
+    closeModal('modal-plan');
+    loadAdminUsers();
+  } else alert(d.detail||'Xatolik');
+}
+
+// ── BLOCK ──
+async function blockUser(id){
+  const d=await api('POST',`/admin/block/${id}`);
+  if(d.ok) loadAdminUsers();
+}
+
+// ── MODAL ──
+function openModal(id){ document.getElementById(id).classList.add('open') }
+function closeModal(id){ document.getElementById(id).classList.remove('open') }
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open') });
+});
+
+// ── URL routing ──
+function checkRoute(){
+  if(window.location.hash==='#admin') showPage('admin-login');
+}
+window.addEventListener('hashchange', checkRoute);
+
+init();
+checkRoute();
+</script>
+</body>
+</html>
