@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TezHost — O'zbekistonning Eng Tez Hostingi</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --g1:#f5d97e;--g2:#d4a017;--g3:#a07810;--g4:#7a5c00;
+  --bg:#080601;--bg2:#0f0b01;--bg3:#161100;--card:#120d02;--card2:#1c1500;
+  --text:#f0e6c8;--dim:#9e8a5a;--mid:#c4b07a;
+  --border:rgba(212,160,23,.2);--border2:rgba(212,160,23,.45);
+  --green:#3ecf74;--red:#f05252;--blue:#4fa8d5;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;overflow-x:hidden}
+
+/* ── NOISE ── */
+body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;width:100%;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(8,6,1,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.logo{font-family:'Cinzel',serif;font-weight:900;font-size:1.55rem;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;letter-spacing:.04em}
+.nav-links{list-style:none;display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--dim);text-decoration:none;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--g1)}
+.nav-cta{padding:8px 22px;background:linear-gradient(135deg,var(--g2),var(--g3));color:#080601;border:none;border-radius:5px;font-family:'Raleway',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:filter .2s;white-space:nowrap}
+.nav-cta:hover{filter:brightness(1.12)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;z-index:400}
+.ham span{display:block;width:24px;height:2px;background:var(--g1);border-radius:2px;transition:transform .3s,opacity .3s}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(8,6,1,.98);flex-direction:column;align-items:center;justify-content:center;gap:32px;z-index:200}
+.mob-menu.open{display:flex}
+.mob-menu a{color:var(--text);text-decoration:none;font-family:'Cinzel',serif;font-size:1.3rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
+.mob-menu a:hover{color:var(--g1)}
+.mob-cta{padding:13px 40px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#080601;border-radius:5px;font-weight:700;font-size:.95rem}
+@media(max-width:768px){nav{padding:14px 20px}.nav-links{display:none}.ham{display:flex}}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 20px 80px;position:relative;z-index:1;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(212,160,23,.12) 0%,transparent 70%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(212,160,23,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,160,23,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border2);color:var(--g2);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:6px 18px;border-radius:30px;margin-bottom:24px;background:rgba(212,160,23,.06);animation:fadeUp .6s ease both}
+.hero h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(2.6rem,7vw,5.8rem);line-height:1.06;margin-bottom:20px;animation:fadeUp .7s .1s ease both}
+.hero h1 .hl{background:linear-gradient(135deg,var(--g1) 0%,var(--g2) 50%,#ffe066 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{max-width:500px;margin:0 auto 36px;color:var(--dim);font-size:1rem;line-height:1.75;animation:fadeUp .7s .2s ease both}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s .3s ease both}
+.btn-gold{padding:13px 34px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#080601;border:none;border-radius:6px;font-family:'Raleway',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.04em;cursor:pointer;text-decoration:none;transition:filter .2s,transform .2s;box-shadow:0 8px 32px rgba(212,160,23,.3)}
+.btn-gold:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.btn-ghost{padding:13px 34px;background:transparent;color:var(--g1);border:1px solid var(--border2);border-radius:6px;font-family:'Raleway',sans-serif;font-weight:600;font-size:.9rem;cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-ghost:hover{background:rgba(212,160,23,.08);transform:translateY(-2px)}
+.hero-stats{display:flex;gap:40px;justify-content:center;margin-top:60px;flex-wrap:wrap;animation:fadeUp .7s .4s ease both}
+.hero-stat-val{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:900;color:var(--g1)}
+.hero-stat-lab{font-size:.7rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+
+/* ── SECTION ── */
+.section{padding:90px 20px;max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.sec-header{text-align:center;margin-bottom:52px}
+.sec-tag{display:inline-block;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g2);margin-bottom:10px}
+.sec-title{font-family:'Cinzel',serif;font-size:clamp(1.6rem,4vw,2.8rem);font-weight:700;line-height:1.2}
+.sec-title .g{background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sec-desc{color:var(--dim);font-size:.92rem;max-width:460px;margin:12px auto 0;line-height:1.75}
+
+/* ── BILLING TOGGLE ── */
+.billing-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:44px}
+.bill-label{font-size:.85rem;color:var(--dim);cursor:pointer;user-select:none;transition:color .2s}
+.bill-label.active{color:var(--g1);font-weight:700}
+.toggle{width:50px;height:26px;background:var(--card2);border:1px solid var(--border);border-radius:13px;position:relative;cursor:pointer;transition:all .3s}
+.toggle.on{background:rgba(212,160,23,.18);border-color:var(--g2)}
+.toggle-dot{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));transition:transform .3s;box-shadow:0 2px 6px rgba(212,160,23,.4)}
+.toggle.on .toggle-dot{transform:translateX(24px)}
+.save-pill{background:rgba(62,207,116,.12);border:1px solid rgba(62,207,116,.25);color:var(--green);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px}
+
+/* ── PRICING ── */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.plan{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px 22px;position:relative;overflow:hidden;transition:all .25s;cursor:default}
+.plan::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g2),transparent);opacity:0;transition:opacity .3s}
+.plan:hover{transform:translateY(-5px);border-color:var(--border2);box-shadow:0 16px 48px rgba(212,160,23,.1)}
+.plan:hover::before{opacity:1}
+.plan.hot{background:linear-gradient(160deg,#1c1500,#0f0b00);border-color:var(--g2);box-shadow:0 0 40px rgba(212,160,23,.15)}
+.plan.hot::before{opacity:1}
+.hot-badge{position:absolute;top:12px;right:12px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#080601;font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px}
+.plan-ico{font-size:1.7rem;margin-bottom:12px}
+.plan-name{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:var(--g1);margin-bottom:3px}
+.plan-disk{font-size:.75rem;color:var(--dim);margin-bottom:16px}
+.plan-div{height:1px;background:var(--border);margin-bottom:16px}
+.price-wrap{margin-bottom:4px}
+.price-num{font-family:'Cinzel',serif;font-size:1.55rem;font-weight:900;color:var(--text)}
+.price-cur{font-size:.72rem;color:var(--g2);font-weight:600;margin-right:2px}
+.price-per{font-size:.72rem;color:var(--dim);margin-left:3px}
+.price-old{font-size:.72rem;color:var(--dim);text-decoration:line-through;display:none;margin-bottom:2px}
+.price-save{display:none;font-size:.68rem;color:var(--green);font-weight:700;background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.2);padding:2px 8px;border-radius:20px;margin-bottom:12px;width:fit-content}
+.plan-feats{list-style:none;margin:12px 0 20px}
+.plan-feats li{font-size:.75rem;color:var(--dim);padding:4px 0;display:flex;align-items:center;gap:7px}
+.plan-feats li::before{content:'✦';color:var(--g2);font-size:.55rem;flex-shrink:0}
+.plan-btn{width:100%;padding:10px;border-radius:6px;font-family:'Raleway',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--g1);transition:all .2s}
+.plan-btn:hover,.plan.hot .plan-btn{background:linear-gradient(135deg,var(--g1),var(--g2));color:#080601;border-color:var(--g2)}
+
+/* ── FEATURES ── */
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.feat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px 24px;transition:all .2s}
+.feat:hover{border-color:var(--border2);transform:translateY(-3px)}
+.feat-ico{font-size:1.6rem;margin-bottom:12px}
+.feat-title{font-family:'Cinzel',serif;font-size:.9rem;color:var(--g1);margin-bottom:8px}
+.feat-desc{font-size:.8rem;color:var(--dim);line-height:1.65}
+
+/* ── FAQ ── */
+.faqs{max-width:700px;margin:0 auto}
+.faq{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;background:var(--card)}
+.faq-q{width:100%;background:none;border:none;color:var(--text);font-family:'Raleway',sans-serif;font-size:.88rem;font-weight:600;text-align:left;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:10px}
+.faq-q .arr{color:var(--g2);font-size:.75rem;transition:transform .3s;flex-shrink:0}
+.faq.open .arr{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s,padding .3s;font-size:.82rem;color:var(--dim);line-height:1.7;padding:0 20px}
+.faq.open .faq-a{max-height:180px;padding:0 20px 16px}
+
+/* ── CONTACT ── */
+.contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;max-width:650px;margin:0 auto}
+.contact{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px 20px;text-align:center;text-decoration:none;transition:all .2s}
+.contact:hover{border-color:var(--g2);transform:translateY(-3px)}
+.contact-ico{font-size:1.8rem;margin-bottom:10px}
+.contact-title{font-family:'Cinzel',serif;font-size:.88rem;color:var(--g1);margin-bottom:4px}
+.contact-val{font-size:.78rem;color:var(--dim)}
+
+/* ── CTA ── */
+.cta{text-align:center;padding:80px 20px;border-top:1px solid var(--border);position:relative;z-index:1}
+.cta-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:500px;height:150px;background:radial-gradient(ellipse,rgba(212,160,23,.1) 0%,transparent 70%);pointer-events:none}
+.cta h2{font-family:'Cinzel',serif;font-size:clamp(1.5rem,4vw,2.8rem);margin-bottom:16px}
+.cta p{color:var(--dim);font-size:.92rem;max-width:420px;margin:0 auto 32px;line-height:1.7}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:32px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:relative;z-index:1}
+.footer-logo{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:900;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+footer p{color:var(--dim);font-size:.75rem}
+footer ul{list-style:none;display:flex;gap:20px}
+footer ul a{color:var(--dim);text-decoration:none;font-size:.75rem;transition:color .2s}
+footer ul a:hover{color:var(--g1)}
+@media(max-width:600px){footer{padding:24px 20px;flex-direction:column;text-align:center}}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:0 48px}
+
+/* ══ MODAL ══ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:600;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:18px;width:100%;max-width:430px;padding:32px 28px;position:relative;animation:popIn .3s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--dim);font-size:1.2rem;cursor:pointer;line-height:1;transition:color .2s}
+.modal-close:hover{color:var(--red)}
+.modal-plan{background:rgba(212,160,23,.07);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:20px}
+.modal-plan-name{font-size:.88rem;font-weight:700;color:var(--g1)}
+.modal-plan-price{font-size:.78rem;color:var(--g2);margin-top:2px}
+.tabs{display:flex;background:var(--bg);border-radius:8px;margin-bottom:20px;overflow:hidden;border:1px solid var(--border)}
+.tab{flex:1;padding:9px;background:transparent;color:var(--dim);border:none;font-family:'Raleway',sans-serif;font-weight:600;font-size:.8rem;cursor:pointer;transition:all .2s}
+.tab.active{background:linear-gradient(135deg,var(--g1),var(--g2));color:#080601}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:.7rem;color:var(--dim);margin-bottom:5px;letter-spacing:.04em}
+.form-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 13px;border-radius:6px;font-size:.83rem;font-family:'Raleway',sans-serif;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--g2)}
+.form-err{display:none;color:var(--red);font-size:.73rem;padding:8px 12px;background:rgba(240,82,82,.08);border:1px solid rgba(240,82,82,.2);border-radius:5px;margin-bottom:12px}
+.modal-btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#080601;border:none;border-radius:6px;font-family:'Raleway',sans-serif;font-weight:700;font-size:.87rem;cursor:pointer;transition:filter .2s;letter-spacing:.04em}
+.modal-btn:hover{filter:brightness(1.1)}
+.modal-note{text-align:center;margin-top:14px;font-size:.7rem;color:var(--dim);line-height:1.6}
+.modal-note a{color:var(--g2);text-decoration:none}
+
+/* ══ PAYMENT MODAL ══ */
+.pay-info{background:rgba(212,160,23,.07);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:18px}
+.pay-row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:.8rem}
+.pay-row span:first-child{color:var(--dim)}
+.pay-row span:last-child{color:var(--text);font-weight:600}
+.pay-total{border-top:1px solid var(--border);padding-top:8px;margin-top:4px}
+.pay-total span:last-child{color:var(--g1);font-size:.95rem;font-family:'Cinzel',serif}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.pay-method{padding:12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;text-align:center;transition:all .2s}
+.pay-method:hover,.pay-method.selected{border-color:var(--g2);background:rgba(212,160,23,.07)}
+.pay-method-ico{font-size:1.3rem;margin-bottom:4px}
+.pay-method-name{font-size:.7rem;color:var(--dim)}
+.pay-detail{display:none;background:rgba(212,160,23,.05);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:16px}
+.pay-detail.show{display:block}
+.pay-card-num{font-family:'JetBrains Mono',monospace;font-size:1.1rem;color:var(--g1);letter-spacing:.1em;margin:6px 0}
+
+/* ── ANIM ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">TezHost</a>
+  <ul class="nav-links">
+    <li><a href="#tariflar">Tariflar</a></li>
+    <li><a href="#xizmatlar">Xizmatlar</a></li>
+    <li><a href="#faq">Savol-Javob</a></li>
+    <li><a href="#aloqa">Aloqa</a></li>
+    <li><a class="nav-cta" href="#tariflar">Boshlash</a></li>
+  </ul>
+  <div class="ham" id="ham" onclick="toggleMob()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <a href="#tariflar" onclick="closeMob()">Tariflar</a>
+  <a href="#xizmatlar" onclick="closeMob()">Xizmatlar</a>
+  <a href="#faq" onclick="closeMob()">Savol-Javob</a>
+  <a href="#aloqa" onclick="closeMob()">Aloqa</a>
+  <a class="mob-cta" href="#tariflar" onclick="closeMob()">Boshlash</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div style="position:relative;z-index:1">
+    <div class="badge">⚡ O'zbekistonning eng tez hostingi</div>
+    <h1>Saytingizni<br><span class="hl">Tez va Ishonchli</span><br>Joylashtiring</h1>
+    <p>TezHost bilan saytingiz 24/7 ishlaydi. NVMe SSD tezlik, bepul SSL, arzon narxlar.</p>
+    <div class="hero-btns">
+      <a class="btn-gold" href="#tariflar">Tarif tanlash</a>
+      <a class="btn-ghost" href="#xizmatlar">Batafsil</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-val">99.9%</div><div class="hero-stat-lab">Uptime</div></div>
+      <div><div class="hero-stat-val">24/7</div><div class="hero-stat-lab">Qo'llab-quvvatlash</div></div>
+      <div><div class="hero-stat-val">500+</div><div class="hero-stat-lab">Faol mijoz</div></div>
+      <div><div class="hero-stat-val">5★</div><div class="hero-stat-lab">Reyting</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section class="section" id="tariflar">
+  <div class="sec-header">
+    <div class="sec-tag">✦ Narxlar ✦</div>
+    <h2 class="sec-title">O'zingizga mos <span class="g">Tarif</span> tanlang</h2>
+    <p class="sec-desc">Barcha tariflar SSD disk, SSL sertifikat va bepul texnik yordam bilan keladi.</p>
+  </div>
+
+  <!-- Toggle -->
+  <div class="billing-wrap">
+    <span class="bill-label active" id="lblM" onclick="setBill('monthly')">Oylik</span>
+    <div class="toggle" id="toggle" onclick="switchBill()"><div class="toggle-dot"></div></div>
+    <span class="bill-label" id="lblY" onclick="setBill('yearly')">Yillik</span>
+    <span class="save-pill" id="savePill" style="display:none">Tejab qoling!</span>
+  </div>
+
+  <div class="plans">
+    <!-- Ultra 10 -->
+    <div class="plan">
+      <div class="plan-ico">🌱</div>
+      <div class="plan-name">Ultra 10</div>
+      <div class="plan-disk">10 GB · SSD Disk</div>
+      <div class="plan-div"></div>
+      <div class="price-old" data-old="40,000 so'm/oy"></div>
+      <div class="price-wrap">
+        <span class="price-num"><span class="price-cur">so'm </span><span class="p-val" data-m="40,000" data-y="350,000">40,000</span></span>
+        <span class="price-per p-per">/ oy</span>
+      </div>
+      <div class="price-save" data-save="130,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-feats">
+        <li>10 GB SSD disk</li>
+        <li>1 domen bepul</li>
+        <li>SSL sertifikat</li>
+        <li>24/7 yordam</li>
+      </ul>
+      <button class="plan-btn" data-plan="ultra10">Tanlash</button>
+    </div>
+
+    <!-- Ultra 20 -->
+    <div class="plan">
+      <div class="plan-ico">🚀</div>
+      <div class="plan-name">Ultra 20</div>
+      <div class="plan-disk">20 GB · SSD Disk</div>
+      <div class="plan-div"></div>
+      <div class="price-old" data-old="70,000 so'm/oy"></div>
+      <div class="price-wrap">
+        <span class="price-num"><span class="price-cur">so'm </span><span class="p-val" data-m="70,000" data-y="600,000">70,000</span></span>
+        <span class="price-per p-per">/ oy</span>
+      </div>
+      <div class="price-save" data-save="240,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-feats">
+        <li>20 GB SSD disk</li>
+        <li>3 domen bepul</li>
+        <li>SSL sertifikat</li>
+        <li>E-mail hosting</li>
+      </ul>
+      <button class="plan-btn" data-plan="ultra20">Tanlash</button>
+    </div>
+
+    <!-- Ultra 35 -->
+    <div class="plan hot">
+      <div class="hot-badge">Mashhur</div>
+      <div class="plan-ico">⭐</div>
+      <div class="plan-name">Ultra 35</div>
+      <div class="plan-disk">35 GB · SSD Disk</div>
+      <div class="plan-div"></div>
+      <div class="price-old" data-old="110,000 so'm/oy"></div>
+      <div class="price-wrap">
+        <span class="price-num"><span class="price-cur">so'm </span><span class="p-val" data-m="110,000" data-y="900,000">110,000</span></span>
+        <span class="price-per p-per">/ oy</span>
+      </div>
+      <div class="price-save" data-save="420,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-feats">
+        <li>35 GB SSD disk</li>
+        <li>5 domen bepul</li>
+        <li>SSL sertifikat</li>
+        <li>Biznes e-mail</li>
+        <li>Kengaytirilgan yordam</li>
+      </ul>
+      <button class="plan-btn" data-plan="ultra35">Tanlash</button>
+    </div>
+
+    <!-- Ultra 50 -->
+    <div class="plan">
+      <div class="plan-ico">💎</div>
+      <div class="plan-name">Ultra 50</div>
+      <div class="plan-disk">50 GB · SSD Disk</div>
+      <div class="plan-div"></div>
+      <div class="price-old" data-old="150,000 so'm/oy"></div>
+      <div class="price-wrap">
+        <span class="price-num"><span class="price-cur">so'm </span><span class="p-val" data-m="150,000" data-y="1,200,000">150,000</span></span>
+        <span class="price-per p-per">/ oy</span>
+      </div>
+      <div class="price-save" data-save="600,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-feats">
+        <li>50 GB SSD disk</li>
+        <li>Cheksiz domen</li>
+        <li>SSL sertifikat</li>
+        <li>VIP yordam</li>
+        <li>Kunlik backup</li>
+      </ul>
+      <button class="plan-btn" data-plan="ultra50">Tanlash</button>
+    </div>
+
+    <!-- Ultra 100 -->
+    <div class="plan" style="border-color:rgba(212,160,23,.35);background:linear-gradient(160deg,#1a1400,#0f0b00)">
+      <div class="plan-ico">👑</div>
+      <div class="plan-name">Ultra 100</div>
+      <div class="plan-disk">100 GB · NVMe SSD</div>
+      <div class="plan-div"></div>
+      <div class="price-old" data-old="250,000 so'm/oy"></div>
+      <div class="price-wrap">
+        <span class="price-num"><span class="price-cur">so'm </span><span class="p-val" data-m="250,000" data-y="1,900,000">250,000</span></span>
+        <span class="price-per p-per">/ oy</span>
+      </div>
+      <div class="price-save" data-save="1,100,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-feats">
+        <li>100 GB NVMe disk</li>
+        <li>Cheksiz domen</li>
+        <li>Wildcard SSL</li>
+        <li>Dedicated IP</li>
+        <li>Ustuvor yordam</li>
+        <li>Soatlik backup</li>
+      </ul>
+      <button class="plan-btn" data-plan="ultra100">Tanlash</button>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section class="section" id="xizmatlar">
+  <div class="sec-header">
+    <div class="sec-tag">✦ Xizmatlar ✦</div>
+    <h2 class="sec-title">Nima uchun <span class="g">TezHost</span>?</h2>
+    <p class="sec-desc">Faqat server emas — saytingiz doim ishlashini kafolatlaymiz.</p>
+  </div>
+  <div class="feats">
+    <div class="feat"><div class="feat-ico">⚡</div><div class="feat-title">NVMe Tezlik</div><p class="feat-desc">NVMe SSD disklar oddiy hostingdan 10x tezroq. Saytingiz bir zumda ochiladi.</p></div>
+    <div class="feat"><div class="feat-ico">🛡️</div><div class="feat-title">Bepul SSL</div><p class="feat-desc">Har bir tarif bilan bepul SSL — HTTPS orqali xavfsiz ishlaydi.</p></div>
+    <div class="feat"><div class="feat-ico">🔄</div><div class="feat-title">Avtomatik Backup</div><p class="feat-desc">Ma'lumotlaringiz har kuni avtomatik saqlanadi.</p></div>
+    <div class="feat"><div class="feat-ico">🌐</div><div class="feat-title">Bepul Domen</div><p class="feat-desc">Yillik tariflar uchun .uz yoki .com domen bepul.</p></div>
+    <div class="feat"><div class="feat-ico">📊</div><div class="feat-title">cPanel Boshqaruv</div><p class="feat-desc">Qulay panel orqali saytingizni osong boshqaring.</p></div>
+    <div class="feat"><div class="feat-ico">💬</div><div class="feat-title">24/7 Yordam</div><p class="feat-desc">Telegram va email orqali istalgan vaqt muammoni hal qilamiz.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="sec-header">
+    <div class="sec-tag">✦ Savol-Javob ✦</div>
+    <h2 class="sec-title">Ko'p so'raladigan <span class="g">Savollar</span></h2>
+  </div>
+  <div class="faqs">
+    <div class="faq"><button class="faq-q" onclick="togFaq(this)">Hosting qachon faollashadi?<span class="arr">▼</span></button><div class="faq-a">To'lov tasdiqlangandan so'ng 5-15 daqiqa ichida hosting avtomatik faollashadi.</div></div>
+    <div class="faq"><button class="faq-q" onclick="togFaq(this)">Domen bilan birga hosting olish mumkinmi?<span class="arr">▼</span></button><div class="faq-a">Ha, yillik tariflar bilan .uz yoki .com domen bepul beriladi.</div></div>
+    <div class="faq"><button class="faq-q" onclick="togFaq(this)">WordPress o'rnatish mumkinmi?<span class="arr">▼</span></button><div class="faq-a">Albatta! cPanel orqali bir bosishda WordPress, Joomla va boshqalarni o'rnatishingiz mumkin.</div></div>
+    <div class="faq"><button class="faq-q" onclick="togFaq(this)">Tarifni almashtirish mumkinmi?<span class="arr">▼</span></button><div class="faq-a">Ha, istalgan vaqt kattaroq tarifga o'tishingiz mumkin. Farq hisobga olinadi.</div></div>
+    <div class="faq"><button class="faq-q" onclick="togFaq(this)">Pul qaytarish kafolati bormi?<span class="arr">▼</span></button><div class="faq-a">Ha, 7 kun ichida muammo yuzaga kelsa to'liq pul qaytariladi.</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section class="section" id="aloqa">
+  <div class="sec-header">
+    <div class="sec-tag">✦ Aloqa ✦</div>
+    <h2 class="sec-title">Biz bilan <span class="g">Bog'laning</span></h2>
+  </div>
+  <div class="contacts">
+    <a class="contact" href="https://t.me/tezhost" target="_blank"><div class="contact-ico">✈️</div><div class="contact-title">Telegram</div><div class="contact-val">@tezhost</div></a>
+    <a class="contact" href="mailto:info@boostxm.online"><div class="contact-ico">📧</div><div class="contact-title">Email</div><div class="contact-val">info@boostxm.online</div></a>
+    <a class="contact" href="tel:+998901234567"><div class="contact-ico">📞</div><div class="contact-title">Telefon</div><div class="contact-val">+998 90 123 45 67</div></a>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-glow"></div>
+  <h2 class="sec-title">Bugun <span class="g">Boshlang</span></h2>
+  <p>Ro'yxatdan o'ting va birinchi oyni 50% chegirma bilan oling!</p>
+  <div class="cta-btns">
+    <a class="btn-gold" href="#tariflar">Hoziroq Boshlash</a>
+    <a class="btn-ghost" href="https://t.me/tezhost" target="_blank">📱 Telegram</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">TezHost</div>
+  <p>© 2026 TezHost. Barcha huquqlar himoyalangan.</p>
+  <ul>
+    <li><a href="#">Shartlar</a></li>
+    <li><a href="#">Maxfiylik</a></li>
+    <li><a href="#aloqa">Aloqa</a></li>
+  </ul>
+</footer>
+
+<!-- ══ REGISTER/LOGIN MODAL ══ -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <div class="modal-plan" id="authPlanInfo">
+      <div class="modal-plan-name" id="authPlanName"></div>
+      <div class="modal-plan-price" id="authPlanPrice"></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" id="tabReg" onclick="switchTab('reg')">Ro'yxatdan o'tish</button>
+      <button class="tab" id="tabLog" onclick="switchTab('log')">Kirish</button>
+    </div>
+
+    <!-- Register -->
+    <div id="fReg">
+      <div class="form-group"><label class="form-label">Ism</label><input class="form-input" id="rName" placeholder="Ismingiz"/></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="rEmail" type="email" placeholder="email@example.com"/></div>
+      <div class="form-group"><label class="form-label">Parol</label><input class="form-input" id="rPass" type="password" placeholder="Kamida 6 ta belgi"/></div>
+      <div class="form-err" id="rErr"></div>
+      <button class="modal-btn" onclick="doRegister()">Davom etish →</button>
+      <div class="modal-note">Allaqachon akkauntingiz bormi? <a href="#" onclick="switchTab('log')">Kiring</a></div>
+    </div>
+
+    <!-- Login -->
+    <div id="fLog" style="display:none">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="lEmail" type="email" placeholder="email@example.com"/></div>
+      <div class="form-group"><label class="form-label">Parol</label><input class="form-input" id="lPass" type="password" placeholder="••••••••"/></div>
+      <div class="form-err" id="lErr"></div>
+      <button class="modal-btn" onclick="doLogin()">Kirish →</button>
+      <div class="modal-note">Akkaunt yo'qmi? <a href="#" onclick="switchTab('reg')">Ro'yxatdan o'ting</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAYMENT MODAL ══ -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closePay()">✕</button>
+    <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--g1);margin-bottom:18px">💳 To'lov</div>
+    <div class="pay-info">
+      <div class="pay-row"><span>Tarif:</span><span id="pPlan"></span></div>
+      <div class="pay-row"><span>Muddat:</span><span id="pPeriod"></span></div>
+      <div class="pay-row pay-total"><span>Jami:</span><span id="pAmount"></span></div>
+    </div>
+    <div style="font-size:.78rem;color:var(--dim);margin-bottom:10px;font-weight:600">To'lov usuli:</div>
+    <div class="pay-methods">
+      <div class="pay-method" onclick="selPay(this,'card')"><div class="pay-method-ico">💳</div><div class="pay-method-name">Uzcard / Humo</div></div>
+      <div class="pay-method" onclick="selPay(this,'tg')"><div class="pay-method-ico">✈️</div><div class="pay-method-name">Telegram</div></div>
+    </div>
+    <div class="pay-detail" id="pdCard">
+      <div style="font-size:.75rem;color:var(--dim);margin-bottom:6px">Quyidagi kartaga o'tkazing:</div>
+      <div class="pay-card-num">8600 1234 5678 9012</div>
+      <div style="font-size:.72rem;color:var(--dim)">TezHost · Uzcard</div>
+      <div style="font-size:.7rem;color:var(--mid);margin-top:8px;line-height:1.5">⚠️ To'lovdan keyin chekni Telegram ga yuboring. 1-24 soat ichida tasdiqlanadi.</div>
+    </div>
+    <div class="pay-detail" id="pdTg">
+      <div style="font-size:.75rem;color:var(--dim);margin-bottom:10px">Telegram orqali to'lash:</div>
+      <a href="https://t.me/tezhost" target="_blank" style="display:inline-block;padding:9px 22px;background:linear-gradient(135deg,#4fa8d5,#1a5276);color:#fff;border-radius:5px;text-decoration:none;font-size:.8rem;font-weight:700">@tezhost ga yozing →</a>
+      <div style="font-size:.7rem;color:var(--dim);margin-top:8px">Tarif nomi va ismingizni yozing</div>
+    </div>
+    <button class="modal-btn" style="margin-top:4px" onclick="confirmPay()">✓ Tasdiqlash</button>
+  </div>
+</div>
+
+<script>
+const API = "https://treydingazizbek.pythonanywhere.com";
+
+// ══ BILLING TOGGLE ══
+let bill = 'monthly';
+function switchBill(){ setBill(bill==='monthly'?'yearly':'monthly'); }
+function setBill(m){
+  bill = m;
+  const on = m==='yearly';
+  document.getElementById('toggle').classList.toggle('on', on);
+  document.getElementById('lblM').classList.toggle('active', !on);
+  document.getElementById('lblY').classList.toggle('active', on);
+  document.getElementById('savePill').style.display = on ? 'inline-block' : 'none';
+  document.querySelectorAll('.p-val').forEach(el=>{
+    el.textContent = on ? el.dataset.y : el.dataset.m;
+  });
+  document.querySelectorAll('.p-per').forEach(el=>{
+    el.textContent = on ? '/ yil' : '/ oy';
+  });
+  document.querySelectorAll('.price-old').forEach(el=>{
+    el.style.display = on ? 'block' : 'none';
+    el.textContent = el.dataset.old;
+  });
+  document.querySelectorAll('.price-save').forEach(el=>{
+    el.style.display = on ? 'block' : 'none';
+    el.textContent = el.dataset.save;
+  });
+}
+
+// ══ PLAN BUTTONS ══
+const planNames = {
+  ultra10:'Ultra 10', ultra20:'Ultra 20', ultra35:'Ultra 35',
+  ultra50:'Ultra 50', ultra100:'Ultra 100'
+};
+const planPrices = {
+  ultra10:{m:'40,000 so\'m',y:'350,000 so\'m'},
+  ultra20:{m:'70,000 so\'m',y:'600,000 so\'m'},
+  ultra35:{m:'110,000 so\'m',y:'900,000 so\'m'},
+  ultra50:{m:'150,000 so\'m',y:'1,200,000 so\'m'},
+  ultra100:{m:'250,000 so\'m',y:'1,900,000 so\'m'},
+};
+let selPlan = null;
+
+document.querySelectorAll('.plan-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    selPlan = btn.dataset.plan;
+    const name = planNames[selPlan];
+    const price = bill==='yearly' ? planPrices[selPlan].y : planPrices[selPlan].m;
+    const per = bill==='yearly' ? '/ yil' : '/ oy';
+    document.getElementById('authPlanName').textContent = name;
+    document.getElementById('authPlanPrice').textContent = price + ' ' + per;
+    document.getElementById('authModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    switchTab('reg');
+  });
+});
+
+// ══ AUTH MODAL ══
+function closeAuth(){
+  document.getElementById('authModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function switchTab(t){
+  document.getElementById('fReg').style.display = t==='reg'?'block':'none';
+  document.getElementById('fLog').style.display = t==='log'?'block':'none';
+  document.getElementById('tabReg').classList.toggle('active', t==='reg');
+  document.getElementById('tabLog').classList.toggle('active', t==='log');
+}
+function showErr(id, msg){
+  const el = document.getElementById(id);
+  el.textContent = msg; el.style.display = 'block';
+}
+function hideErr(id){ document.getElementById(id).style.display='none'; }
+
+async function doRegister(){
+  hideErr('rErr');
+  const name = document.getElementById('rName').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const pass = document.getElementById('rPass').value;
+  if(!name||!email||!pass){ showErr('rErr',"Barcha maydonlarni to'ldiring"); return; }
+  if(pass.length<6){ showErr('rErr',"Parol kamida 6 ta belgi"); return; }
+
+  try {
+    const res = await fetch(API+'/api/register',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      credentials:'include',
+      body: JSON.stringify({username:name, email, password:pass, plan:selPlan})
+    });
+    const data = await res.json();
+    if(!res.ok){ showErr('rErr', data.error||"Xato yuz berdi"); return; }
+    closeAuth();
+    openPay();
+  } catch(e){
+    // Demo uchun (API ulanganda o'chirish)
+    closeAuth();
+    openPay();
+  }
+}
+
+async function doLogin(){
+  hideErr('lErr');
+  const email = document.getElementById('lEmail').value.trim();
+  const pass = document.getElementById('lPass').value;
+  if(!email||!pass){ showErr('lErr',"Email va parolni kiriting"); return; }
+
+  try {
+    const res = await fetch(API+'/api/login',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      credentials:'include',
+      body: JSON.stringify({email, password:pass})
+    });
+    const data = await res.json();
+    if(!res.ok){ showErr('lErr', data.error||"Noto'g'ri email yoki parol"); return; }
+    closeAuth();
+    openPay();
+  } catch(e){
+    closeAuth();
+    openPay();
+  }
+}
+
+// ══ PAYMENT ══
+function openPay(){
+  const name = planNames[selPlan]||'';
+  const price = bill==='yearly' ? planPrices[selPlan].y : planPrices[selPlan].m;
+  document.getElementById('pPlan').textContent = name;
+  document.getElementById('pPeriod').textContent = bill==='yearly'?'1 yil':'1 oy';
+  document.getElementById('pAmount').textContent = price;
+  document.getElementById('payModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closePay(){
+  document.getElementById('payModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function selPay(el, type){
+  document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('pdCard').classList.toggle('show', type==='card');
+  document.getElementById('pdTg').classList.toggle('show', type==='tg');
+}
+async function confirmPay(){
+  try {
+    await fetch(API+'/api/payment',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      credentials:'include',
+      body: JSON.stringify({plan:selPlan, period:bill})
+    });
+  } catch(e){}
+  closePay();
+  alert("✅ To'lov so'rovi yuborildi!\n\nAdmin 1-24 soat ichida tasdiqlaydi.\n\n📱 Telegram: @tezhost\n\ncPanel: cpanel.boostxm.online\nbPanel: bpanel.boostxm.online");
+}
+
+// ══ NAV ══
+function toggleMob(){
+  document.getElementById('ham').classList.toggle('open');
+  document.getElementById('mobMenu').classList.toggle('open');
+  document.body.style.overflow = document.getElementById('mobMenu').classList.contains('open')?'hidden':'';
+}
+function closeMob(){
+  document.getElementById('ham').classList.remove('open');
+  document.getElementById('mobMenu').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ══ FAQ ══
+function togFaq(btn){
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq').forEach(f=>f.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
