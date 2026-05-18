@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TezHost — Ishonchli Hosting</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold-light: #f5d97e;
+      --gold:       #d4a017;
+      --gold-dark:  #a07810;
+      --bg-dark:    #0a0800;
+      --bg-card:    #120e02;
+      --bg-card2:   #1a1400;
+      --text:       #f0e6c8;
+      --text-dim:   #9e8a5a;
+      --accent:     #ffe066;
+      --border:     rgba(212,160,23,0.25);
+      --green:      #4caf7d;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Raleway', sans-serif;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ══ NAV ══ */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 48px;
+      background: rgba(10,8,0,.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+    .logo {
+      font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.6rem;
+      letter-spacing: .05em;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-links {
+      list-style: none; display: flex; gap: 32px; align-items: center;
+    }
+    .nav-links a {
+      color: var(--text-dim); text-decoration: none; font-size: .85rem;
+      letter-spacing: .08em; text-transform: uppercase; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-btn {
+      padding: 9px 24px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0a0800; border: none; border-radius: 4px;
+      font-family: 'Raleway', sans-serif; font-weight: 700; font-size: .82rem;
+      letter-spacing: .06em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none; transition: filter .2s;
+    }
+    .nav-btn:hover { filter: brightness(1.15); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px; z-index: 300;
+    }
+    .hamburger span {
+      display: block; width: 26px; height: 2.5px;
+      background: var(--gold-light); border-radius: 2px;
+      transition: transform .35s, opacity .35s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+    /* Mobile drawer */
+    .mobile-menu {
+      display: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(10,8,0,.98);
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 36px; z-index: 150;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: var(--text); text-decoration: none;
+      font-family: 'Cinzel', serif; font-size: 1.4rem;
+      letter-spacing: .1em; text-transform: uppercase; transition: color .2s;
+    }
+    .mobile-menu a:hover { color: var(--gold-light); }
+    .mobile-menu .m-btn {
+      margin-top: 8px; padding: 14px 44px;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: #0a0800; border-radius: 5px;
+      font-family: 'Raleway', sans-serif; font-weight: 700;
+      font-size: 1rem; letter-spacing: .07em;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ══ HERO ══ */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 120px 24px 80px; position: relative;
+    }
+    .hero-glow {
+      position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(212,160,23,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block; border: 1px solid var(--border); color: var(--gold);
+      font-size: .74rem; letter-spacing: .15em; text-transform: uppercase;
+      padding: 6px 20px; border-radius: 30px; margin-bottom: 28px;
+      background: rgba(212,160,23,.07); animation: fadeUp .7s ease both;
+    }
+    .hero h1 {
+      font-family: 'Cinzel', serif; font-weight: 900;
+      font-size: clamp(2.4rem, 7vw, 5.5rem);
+      line-height: 1.08; margin-bottom: 22px;
+      animation: fadeUp .8s .1s ease both;
+    }
+    .hero h1 .hl {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      max-width: 520px; margin: 0 auto 40px;
+      color: var(--text-dim); font-size: 1.05rem; line-height: 1.7;
+      animation: fadeUp .8s .2s ease both;
+    }
+    .hero-actions {
+      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp .8s .3s ease both;
+    }
+    .btn-primary {
+      padding: 14px 36px;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: #0a0800; border: none; border-radius: 5px;
+      font-family: 'Raleway', sans-serif; font-weight: 700; font-size: .93rem;
+      letter-spacing: .04em; cursor: pointer; text-decoration: none;
+      transition: filter .2s, transform .2s;
+      box-shadow: 0 6px 30px rgba(212,160,23,.3);
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .btn-outline {
+      padding: 14px 36px; background: transparent; color: var(--gold-light);
+      border: 1px solid var(--border); border-radius: 5px;
+      font-family: 'Raleway', sans-serif; font-weight: 600; font-size: .93rem;
+      letter-spacing: .04em; cursor: pointer; text-decoration: none;
+      transition: background .2s, transform .2s;
+    }
+    .btn-outline:hover { background: rgba(212,160,23,.1); transform: translateY(-2px); }
+
+    /* ══ STATS ══ */
+    .stats {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      margin: 0 48px; position: relative; z-index: 1;
+    }
+    .stat-item {
+      flex: 1; min-width: 140px; text-align: center;
+      padding: 32px 20px; border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 900;
+      color: var(--gold-light);
+    }
+    .stat-label {
+      font-size: .75rem; color: var(--text-dim);
+      letter-spacing: .1em; text-transform: uppercase; margin-top: 5px;
+    }
+    @media (max-width: 600px) { .stats { margin: 0 16px; } }
+
+    /* ══ SECTION ══ */
+    .section {
+      padding: 90px 24px; max-width: 1200px;
+      margin: 0 auto; position: relative; z-index: 1;
+    }
+    .section-header { text-align: center; margin-bottom: 56px; }
+    .section-tag {
+      display: inline-block; font-size: .7rem;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 700; line-height: 1.2;
+    }
+    .section-title .g {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .section-desc {
+      color: var(--text-dim); font-size: .95rem;
+      max-width: 480px; margin: 14px auto 0; line-height: 1.7;
+    }
+
+    /* ══ BILLING TOGGLE ══ */
+    .billing-toggle {
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; margin-bottom: 48px;
+    }
+    .billing-label {
+      font-size: .88rem; color: var(--text-dim); letter-spacing: .05em;
+      transition: color .2s; cursor: pointer; user-select: none;
+    }
+    .billing-label.active { color: var(--gold-light); font-weight: 600; }
+    .toggle-track {
+      width: 52px; height: 28px;
+      background: var(--bg-card2); border: 1px solid var(--border);
+      border-radius: 14px; position: relative; cursor: pointer;
+      transition: background .3s;
+    }
+    .toggle-track.yearly { background: rgba(212,160,23,.2); border-color: var(--gold); }
+    .toggle-thumb {
+      position: absolute; top: 3px; left: 3px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      transition: transform .3s;
+      box-shadow: 0 2px 8px rgba(212,160,23,.4);
+    }
+    .toggle-track.yearly .toggle-thumb { transform: translateX(24px); }
+    .save-badge {
+      background: rgba(76,175,125,.15); border: 1px solid rgba(76,175,125,.3);
+      color: var(--green); font-size: .7rem; letter-spacing: .08em;
+      padding: 3px 10px; border-radius: 20px; font-weight: 700;
+    }
+
+    /* ══ PRICING CARDS ══ */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px;
+    }
+    .plan-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 32px 24px;
+      position: relative; overflow: hidden;
+      transition: transform .25s, box-shadow .25s, border-color .25s;
+    }
+    .plan-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0; transition: opacity .3s;
+    }
+    .plan-card:hover { transform: translateY(-6px); border-color: rgba(212,160,23,.5); box-shadow: 0 20px 50px rgba(212,160,23,.1); }
+    .plan-card:hover::before { opacity: 1; }
+    .plan-card.popular {
+      background: linear-gradient(160deg, #1c1500, #0f0b00);
+      border-color: var(--gold); box-shadow: 0 0 40px rgba(212,160,23,.15);
+    }
+    .plan-card.popular::before { opacity: 1; }
+    .popular-badge {
+      position: absolute; top: 14px; right: 14px;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: #0a0800; font-size: .62rem; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .plan-icon { font-size: 1.8rem; margin-bottom: 14px; }
+    .plan-name {
+      font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700;
+      color: var(--gold-light); letter-spacing: .05em; margin-bottom: 4px;
+    }
+    .plan-storage { font-size: .8rem; color: var(--text-dim); margin-bottom: 20px; }
+    .plan-divider { height: 1px; background: var(--border); margin-bottom: 18px; }
+    .price-main { margin-bottom: 4px; }
+    .price-amount {
+      font-family: 'Cinzel', serif; font-size: 1.6rem; font-weight: 900; color: var(--text);
+    }
+    .price-amount .currency { font-size: .75rem; color: var(--gold); font-weight: 600; margin-right: 2px; }
+    .price-period { font-size: .75rem; color: var(--text-dim); margin-left: 3px; }
+    .price-old { font-size: .76rem; color: var(--text-dim); text-decoration: line-through; margin-bottom: 4px; display: none; }
+    .price-save-tag {
+      display: none; font-size: .7rem; color: var(--green); font-weight: 700;
+      background: rgba(76,175,125,.1); border: 1px solid rgba(76,175,125,.25);
+      padding: 2px 8px; border-radius: 20px; margin-bottom: 16px;
+    }
+    .plan-features { list-style: none; margin: 14px 0 24px; }
+    .plan-features li {
+      font-size: .8rem; color: var(--text-dim);
+      padding: 5px 0; display: flex; align-items: center; gap: 8px;
+    }
+    .plan-features li::before { content: '✦'; color: var(--gold); font-size: .58rem; }
+    .plan-btn {
+      width: 100%; padding: 11px; border-radius: 6px;
+      font-family: 'Raleway', sans-serif; font-weight: 700; font-size: .82rem;
+      letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--gold-light); transition: all .2s;
+    }
+    .plan-btn:hover, .plan-card.popular .plan-btn {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: #0a0800; border-color: var(--gold);
+    }
+
+    /* ══ FEATURES ══ */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;
+    }
+    .feat-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 30px 26px;
+      transition: border-color .25s, transform .25s;
+    }
+    .feat-card:hover { border-color: rgba(212,160,23,.5); transform: translateY(-4px); }
+    .feat-icon { font-size: 1.7rem; margin-bottom: 14px; }
+    .feat-title { font-family: 'Cinzel', serif; font-size: .95rem; color: var(--gold-light); margin-bottom: 8px; }
+    .feat-desc { font-size: .82rem; color: var(--text-dim); line-height: 1.65; }
+
+    /* ══ FAQ ══ */
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-item {
+      border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 12px; overflow: hidden; background: var(--bg-card);
+    }
+    .faq-q {
+      width: 100%; background: none; border: none; color: var(--text);
+      font-family: 'Raleway', sans-serif; font-size: .93rem; font-weight: 600;
+      text-align: left; padding: 18px 22px;
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; gap: 12px;
+    }
+    .faq-q .arrow { color: var(--gold); font-size: .8rem; transition: transform .3s; flex-shrink: 0; }
+    .faq-item.open .faq-q .arrow { transform: rotate(180deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .4s ease, padding .3s;
+      font-size: .85rem; color: var(--text-dim); line-height: 1.7; padding: 0 22px;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 22px 18px; }
+
+    /* ══ CONTACT ══ */
+    .contact-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap: 18px; max-width: 700px; margin: 0 auto;
+    }
+    .contact-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 28px 24px; text-align: center;
+      text-decoration: none; transition: border-color .25s, transform .25s;
+    }
+    .contact-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+    .contact-icon { font-size: 2rem; margin-bottom: 12px; }
+    .contact-title { font-family: 'Cinzel', serif; font-size: .95rem; color: var(--gold-light); margin-bottom: 6px; }
+    .contact-val { font-size: .83rem; color: var(--text-dim); }
+
+    /* ══ CTA ══ */
+    .cta-section {
+      text-align: center; padding: 90px 24px;
+      border-top: 1px solid var(--border); position: relative;
+    }
+    .cta-glow {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 160px;
+      background: radial-gradient(ellipse, rgba(212,160,23,.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 { font-family: 'Cinzel', serif; font-size: clamp(1.6rem, 4vw, 3rem); margin-bottom: 18px; }
+    .cta-section h2 .g {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .cta-section p { color: var(--text-dim); font-size: .97rem; max-width: 440px; margin: 0 auto 36px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ══ FOOTER ══ */
+    footer {
+      border-top: 1px solid var(--border); padding: 36px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 14px; position: relative; z-index: 1;
+    }
+    .footer-logo {
+      font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 900;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    footer p { color: var(--text-dim); font-size: .78rem; }
+    footer ul { list-style: none; display: flex; gap: 22px; }
+    footer ul a { color: var(--text-dim); text-decoration: none; font-size: .78rem; transition: color .2s; }
+    footer ul a:hover { color: var(--gold-light); }
+    @media (max-width: 600px) { footer { padding: 28px 20px; flex-direction: column; text-align: center; } }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">TezHost</a>
+  <ul class="nav-links">
+    <li><a href="#tariflar">Tariflar</a></li>
+    <li><a href="#xizmatlar">Xizmatlar</a></li>
+    <li><a href="#faq">Savol-Javob</a></li>
+    <li><a href="#aloqa">Aloqa</a></li>
+    <li><a class="nav-btn" href="#tariflar">Boshlash</a></li>
+  </ul>
+  <div class="hamburger" id="ham" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#tariflar" onclick="closeMenu()">Tariflar</a>
+  <a href="#xizmatlar" onclick="closeMenu()">Xizmatlar</a>
+  <a href="#faq" onclick="closeMenu()">Savol-Javob</a>
+  <a href="#aloqa" onclick="closeMenu()">Aloqa</a>
+  <a class="m-btn" href="#tariflar" onclick="closeMenu()">Boshlash</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">⚡ O'zbekistonning eng tez hostingi</div>
+    <h1>Saytingizni<br><span class="hl">Tez va Ishonchli</span><br>Joylashtiring</h1>
+    <p>TezHost bilan saytingiz 24/7 ishlaydi. NVMe SSD tezlik, arzon narx, bepul SSL.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#tariflar">Tarif tanlash</a>
+      <a class="btn-outline" href="#xizmatlar">Batafsil</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item"><div class="stat-num">99.9%</div><div class="stat-label">Uptime</div></div>
+  <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Qo'llab-quvvatlash</div></div>
+  <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Faol mijoz</div></div>
+  <div class="stat-item"><div class="stat-num">5★</div><div class="stat-label">Reyting</div></div>
+</div>
+
+<!-- PRICING -->
+<section class="section" id="tariflar">
+  <div class="section-header">
+    <div class="section-tag">✦ Narxlar ✦</div>
+    <h2 class="section-title">O'zingizga mos <span class="g">Tarif</span> tanlang</h2>
+    <p class="section-desc">Barcha tariflar SSD disk, SSL sertifikat va bepul texnik yordam bilan keladi.</p>
+  </div>
+
+  <!-- Oylik / Yillik toggle -->
+  <div class="billing-toggle">
+    <span class="billing-label active" id="lbl-monthly" onclick="setBilling('monthly')">Oylik</span>
+    <div class="toggle-track" id="toggleTrack" onclick="switchBilling()">
+      <div class="toggle-thumb"></div>
+    </div>
+    <span class="billing-label" id="lbl-yearly" onclick="setBilling('yearly')">Yillik</span>
+    <span class="save-badge">Tejab qoling!</span>
+  </div>
+
+  <div class="pricing-grid">
+
+    <!-- Ultra 10 | oy=40,000 yil=350,000 tejash=130,000 -->
+    <div class="plan-card">
+      <div class="plan-icon">🌱</div>
+      <div class="plan-name">Ultra 10</div>
+      <div class="plan-storage">10 GB · SSD Disk</div>
+      <div class="plan-divider"></div>
+      <div class="price-main">
+        <span class="price-amount"><span class="currency">so'm </span><span class="js-price" data-monthly="40,000" data-yearly="29,167">40,000</span></span>
+        <span class="price-period">/ oy</span>
+      </div>
+      <div class="price-old js-old" data-txt="40,000 so'm o'rniga"></div>
+      <div class="price-save-tag js-save" data-txt="130,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-features">
+        <li>10 GB SSD disk</li>
+        <li>1 domen bepul</li>
+        <li>SSL sertifikat</li>
+        <li>24/7 yordam</li>
+      </ul>
+      <button class="plan-btn">Tanlash</button>
+    </div>
+
+    <!-- Ultra 20 | oy=70,000 yil=600,000 tejash=240,000 -->
+    <div class="plan-card">
+      <div class="plan-icon">🚀</div>
+      <div class="plan-name">Ultra 20</div>
+      <div class="plan-storage">20 GB · SSD Disk</div>
+      <div class="plan-divider"></div>
+      <div class="price-main">
+        <span class="price-amount"><span class="currency">so'm </span><span class="js-price" data-monthly="70,000" data-yearly="50,000">70,000</span></span>
+        <span class="price-period">/ oy</span>
+      </div>
+      <div class="price-old js-old" data-txt="70,000 so'm o'rniga"></div>
+      <div class="price-save-tag js-save" data-txt="240,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-features">
+        <li>20 GB SSD disk</li>
+        <li>3 domen bepul</li>
+        <li>SSL sertifikat</li>
+        <li>E-mail hosting</li>
+      </ul>
+      <button class="plan-btn">Tanlash</button>
+    </div>
+
+    <!-- Ultra 35 | oy=110,000 yil=900,000 tejash=420,000 -->
+    <div class="plan-card popular">
+      <div class="popular-badge">Mashhur</div>
+      <div class="plan-icon">⭐</div>
+      <div class="plan-name">Ultra 35</div>
+      <div class="plan-storage">35 GB · SSD Disk</div>
+      <div class="plan-divider"></div>
+      <div class="price-main">
+        <span class="price-amount"><span class="currency">so'm </span><span class="js-price" data-monthly="110,000" data-yearly="75,000">110,000</span></span>
+        <span class="price-period">/ oy</span>
+      </div>
+      <div class="price-old js-old" data-txt="110,000 so'm o'rniga"></div>
+      <div class="price-save-tag js-save" data-txt="420,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-features">
+        <li>35 GB SSD disk</li>
+        <li>5 domen bepul</li>
+        <li>SSL sertifikat</li>
+        <li>Biznes e-mail</li>
+        <li>Kengaytirilgan yordam</li>
+      </ul>
+      <button class="plan-btn">Tanlash</button>
+    </div>
+
+    <!-- Ultra 50 | oy=150,000 yil=1,200,000 tejash=600,000 -->
+    <div class="plan-card">
+      <div class="plan-icon">💎</div>
+      <div class="plan-name">Ultra 50</div>
+      <div class="plan-storage">50 GB · SSD Disk</div>
+      <div class="plan-divider"></div>
+      <div class="price-main">
+        <span class="price-amount"><span class="currency">so'm </span><span class="js-price" data-monthly="150,000" data-yearly="100,000">150,000</span></span>
+        <span class="price-period">/ oy</span>
+      </div>
+      <div class="price-old js-old" data-txt="150,000 so'm o'rniga"></div>
+      <div class="price-save-tag js-save" data-txt="600,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-features">
+        <li>50 GB SSD disk</li>
+        <li>Cheksiz domen</li>
+        <li>SSL sertifikat</li>
+        <li>VIP qo'llab-quvvatlash</li>
+        <li>Kunlik backup</li>
+      </ul>
+      <button class="plan-btn">Tanlash</button>
+    </div>
+
+    <!-- Ultra 100 | oy=250,000 yil=1,900,000 tejash=1,100,000 -->
+    <div class="plan-card" style="border-color:rgba(212,160,23,.4);background:linear-gradient(160deg,#1a1400,#100c00);">
+      <div class="plan-icon">👑</div>
+      <div class="plan-name">Ultra 100</div>
+      <div class="plan-storage">100 GB · NVMe SSD</div>
+      <div class="plan-divider"></div>
+      <div class="price-main">
+        <span class="price-amount"><span class="currency">so'm </span><span class="js-price" data-monthly="250,000" data-yearly="158,333">250,000</span></span>
+        <span class="price-period">/ oy</span>
+      </div>
+      <div class="price-old js-old" data-txt="250,000 so'm o'rniga"></div>
+      <div class="price-save-tag js-save" data-txt="1,100,000 so'm tejaysiz 💰"></div>
+      <ul class="plan-features">
+        <li>100 GB NVMe disk</li>
+        <li>Cheksiz domen</li>
+        <li>Wildcard SSL</li>
+        <li>Dedicated IP</li>
+        <li>Ustuvor yordam</li>
+        <li>Soatlik backup</li>
+      </ul>
+      <button class="plan-btn">Tanlash</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="xizmatlar" style="padding-top:0;">
+  <div class="section-header">
+    <div class="section-tag">✦ Xizmatlar ✦</div>
+    <h2 class="section-title">Nima uchun <span class="g">TezHost</span>?</h2>
+    <p class="section-desc">Faqat server emas — saytingiz doim ishlashini kafolatlaymiz.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">NVMe Tezlik</div><p class="feat-desc">NVMe SSD disklar oddiy hostingdan 10x tezroq. Saytingiz bir zumda ochiladi.</p></div>
+    <div class="feat-card"><div class="feat-icon">🛡️</div><div class="feat-title">Bepul SSL</div><p class="feat-desc">Har bir tarif bilan bepul SSL sertifikat — HTTPS orqali xavfsiz ishlaydi.</p></div>
+    <div class="feat-card"><div class="feat-icon">🔄</div><div class="feat-title">Avtomatik Backup</div><p class="feat-desc">Ma'lumotlaringiz har kuni avtomatik saqlanadi. Hech narsa yo'qolmaydi.</p></div>
+    <div class="feat-card"><div class="feat-icon">🌐</div><div class="feat-title">Bepul Domen</div><p class="feat-desc">Yillik tariflar uchun .uz yoki .com domen bepul beriladi.</p></div>
+    <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">cPanel Boshqaruv</div><p class="feat-desc">Qulay cPanel orqali saytingizni osongina boshqaring.</p></div>
+    <div class="feat-card"><div class="feat-icon">💬</div><div class="feat-title">24/7 Yordam</div><p class="feat-desc">Telegram va email orqali istalgan vaqt muammoni hal qilamiz.</p></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq" style="padding-top:0;">
+  <div class="section-header">
+    <div class="section-tag">✦ Savol-Javob ✦</div>
+    <h2 class="section-title">Ko'p so'raladigan <span class="g">Savollar</span></h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Hosting xarid qilgandan so'ng qachon faollashadi?<span class="arrow">▼</span></button>
+      <div class="faq-a">To'lov tasdiqlangandan so'ng 5-15 daqiqa ichida hosting avtomatik faollashadi va login ma'lumotlari emailingizga yuboriladi.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Domen nomi bilan birga hosting olish mumkinmi?<span class="arrow">▼</span></button>
+      <div class="faq-a">Ha, yillik tariflar bilan birga .uz yoki .com domen bepul beriladi. Siz faqat hostingni to'laysiz.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">WordPress yoki boshqa CMS o'rnatish mumkinmi?<span class="arrow">▼</span></button>
+      <div class="faq-a">Albatta! cPanel orqali bir bosish bilan WordPress, Joomla, OpenCart va boshqa ko'plab CMSlarni o'rnatishingiz mumkin.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Tarif o'rtasida almashtirish mumkinmi?<span class="arrow">▼</span></button>
+      <div class="faq-a">Ha, istalgan vaqt kattaroq tarifga o'tishingiz mumkin. Farq miqdori hisobga olinadi va ma'lumotlaringiz saqlanib qoladi.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Pul qaytarish kafolati bormi?<span class="arrow">▼</span></button>
+      <div class="faq-a">Ha, xizmat boshlangandan 7 kun ichida muammo yuzaga kelsa, to'liq pul qaytariladi.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="aloqa" style="padding-top:0;">
+  <div class="section-header">
+    <div class="section-tag">✦ Aloqa ✦</div>
+    <h2 class="section-title">Biz bilan <span class="g">Bog'laning</span></h2>
+    <p class="section-desc">Savollaringiz bormi? Istalgan usulda murojaat qiling.</p>
+  </div>
+  <div class="contact-grid">
+    <a class="contact-card" href="https://t.me/tezhost" target="_blank">
+      <div class="contact-icon">✈️</div>
+      <div class="contact-title">Telegram</div>
+      <div class="contact-val">@tezhost</div>
+    </a>
+    <a class="contact-card" href="mailto:info@tezhost.uz">
+      <div class="contact-icon">📧</div>
+      <div class="contact-title">Email</div>
+      <div class="contact-val">info@tezhost.uz</div>
+    </a>
+    <a class="contact-card" href="tel:+998901234567">
+      <div class="contact-icon">📞</div>
+      <div class="contact-title">Telefon</div>
+      <div class="contact-val">+998 90 123 45 67</div>
+    </a>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <h2>Bugun <span class="g">Boshlang</span></h2>
+  <p>Ro'yxatdan o'ting va birinchi oyni 50% chegirma bilan oling!</p>
+  <div class="cta-actions">
+    <a class="btn-primary" href="#tariflar">Hoziroq Boshlash</a>
+    <a class="btn-outline" href="https://t.me/tezhost" target="_blank">📱 Telegram orqali</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">TezHost</div>
+  <p>© 2026 TezHost. Barcha huquqlar himoyalangan.</p>
+  <ul>
+    <li><a href="#">Shartlar</a></li>
+    <li><a href="#">Maxfiylik</a></li>
+    <li><a href="#aloqa">Aloqa</a></li>
+  </ul>
+</footer>
+
+<script>
+  // ── Hamburger ──
+  function toggleMenu() {
+    document.getElementById('ham').classList.toggle('open');
+    document.getElementById('mobileMenu').classList.toggle('open');
+    document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    document.getElementById('ham').classList.remove('open');
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── Billing toggle ──
+  let billing = 'monthly';
+  function switchBilling() { setBilling(billing === 'monthly' ? 'yearly' : 'monthly'); }
+  function setBilling(mode) {
+    billing = mode;
+    document.getElementById('toggleTrack').classList.toggle('yearly', mode === 'yearly');
+    document.getElementById('lbl-monthly').classList.toggle('active', mode === 'monthly');
+    document.getElementById('lbl-yearly').classList.toggle('active', mode === 'yearly');
+    document.querySelectorAll('.js-price').forEach(el => {
+      el.textContent = mode === 'yearly' ? el.dataset.yearly : el.dataset.monthly;
+    });
+    document.querySelectorAll('.js-old').forEach(el => {
+      el.style.display = mode === 'yearly' ? 'block' : 'none';
+      el.textContent = el.dataset.txt;
+    });
+    document.querySelectorAll('.js-save').forEach(el => {
+      el.style.display = mode === 'yearly' ? 'inline-block' : 'none';
+      el.textContent = el.dataset.txt;
+    });
+  }
+
+  // ── FAQ accordion ──
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>
